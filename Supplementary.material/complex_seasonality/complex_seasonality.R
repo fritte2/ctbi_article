@@ -24,9 +24,7 @@ data.all[,':='(CSR_TIME = CSR.mean,CSR_TIMESTAMP_BEGIN = NULL,CSR_TIMESTAMP_END 
 
 bin.side <- as.POSIXct('2000-01-01 00:00:00',tz='UTC')
 bin.period.successive <- c('1 day','1 month')
-
-
-k.outliers.successive <- c(2,1) # the dataset is sufficiently noisy to raise the value of k to 2 (daily aggregation) and 1 (monthly aggregation)
+k.outliers.successive <- c(0.6,0.6) # the dataset is sufficiently noisy to raise the value of k to 2 (daily aggregation) and 1 (monthly aggregation)
 bin.max.f.NA.successive <- c(0.2,0.3) # days with less than 20% of data are rejected, and months with less than 70% of data are rejected.
 SCI.min <- 1 # do not impute data
 bin.FUN <- 'sum'
