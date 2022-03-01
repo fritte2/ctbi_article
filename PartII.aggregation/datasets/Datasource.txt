@@ -1,0 +1,10 @@
+
+Cape Leuwin:
+https://www.ncdc.noaa.gov/cdo-web/search?datasetid=GHCND
+
+SJER:
+https://www.neonscience.org/field-sites/sjer
+
+CH4:
+https://www.nature.com/articles/nature06950
+
