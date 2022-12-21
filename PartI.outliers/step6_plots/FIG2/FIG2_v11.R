@@ -1,5 +1,5 @@
 
-path.main <- "~/Science/ctbi12/PartI.outliers/step6_plots/FIG2/"
+path.main <- "~/GitHub/ctbi_article/PartI.outliers/step6_plots/FIG2/"
 setwd(path.main)
 
 set.seed(1)
@@ -8,19 +8,20 @@ colley <- 'red'
 colhub <- 'blue'
 colkim <- 'green'
 colsch <- 'orange'
+colbar <- 'yellow'
 
 
 if(1) # histograms
 {
   if(1) # precipitation
   {
-data.sum.hist <- read.table(paste0(path.main,'hist_precipitation_v4.csv'),sep=',',stringsAsFactors = F,header=T)
+data.sum.hist <- read.table(paste0(path.main,'hist_precipitation_v5.csv'),sep=',',stringsAsFactors = F,header=T)
 
 data.sum.hist <- data.sum.hist[data.sum.hist[,2] > 100,]
 plot(data.sum.hist[,1],data.sum.hist[,2],type='h',lwd=4,col='black')
 
     
-data.threshold <- read.table(paste0(path.main,'thresholds_precipitation_v4.csv'),sep=',',stringsAsFactors = F,header=T)
+data.threshold <- read.table(paste0(path.main,'thresholds_precipitation_v5.csv'),sep=',',stringsAsFactors = F,header=T)
 
 l.logbox <- median(data.threshold[,'l.logbox'])
 u.logbox <- median(data.threshold[,'u.logbox'])
@@ -37,23 +38,27 @@ u.kim <- median(data.threshold[,'u.kim'])
 l.hub <- median(data.threshold[,'l.hub'])
 u.hub <- median(data.threshold[,'u.hub'])
 
+l.bar <- median(data.threshold[,'l.bar'])
+u.bar <- median(data.threshold[,'u.bar'])
+
 
 abline(v=c(l.logbox,u.logbox),lwd=2)
 abline(v=c(l.ley,u.ley),col=colley,lwd=2)
 abline(v=c(l.sch,u.sch),col=colsch,lwd=2)
 abline(v=c(l.kim,u.kim),col=colkim,lwd=2)
 abline(v=c(l.hub,u.hub),col=colhub,lwd=2)
+abline(v=c(l.bar,u.bar),col=colbar,lwd=2)
 }
   
   if(1) # temperature
   {
-  data.sum.hist <- read.table(paste0(path.main,'hist_temperature_v4.csv'),sep=',',stringsAsFactors = F,header=T)
+  data.sum.hist <- read.table(paste0(path.main,'hist_temperature_v5.csv'),sep=',',stringsAsFactors = F,header=T)
   
   data.sum.hist <- data.sum.hist[data.sum.hist[,2] > 100,]
   plot(data.sum.hist[,1],data.sum.hist[,2],type='h',lwd=4,col='black',xlim=c(-24,24))
   
   
-  data.threshold <- read.table(paste0(path.main,'thresholds_temperature_v4.csv'),sep=',',stringsAsFactors = F,header=T)
+  data.threshold <- read.table(paste0(path.main,'thresholds_temperature_v5.csv'),sep=',',stringsAsFactors = F,header=T)
   
   l.logbox <- median(data.threshold[,'l.logbox'])
   u.logbox <- median(data.threshold[,'u.logbox'])
@@ -70,12 +75,16 @@ abline(v=c(l.hub,u.hub),col=colhub,lwd=2)
   l.hub <- median(data.threshold[,'l.hub'])
   u.hub <- median(data.threshold[,'u.hub'])
   
+  l.bar <- median(data.threshold[,'l.bar'])
+  u.bar <- median(data.threshold[,'u.bar'])
+  
   
   abline(v=c(l.logbox,u.logbox),lwd=2)
   abline(v=c(l.ley,u.ley),col=colley,lwd=2)
   abline(v=c(l.sch,u.sch),col=colsch,lwd=2)
   abline(v=c(l.kim,u.kim),col=colkim,lwd=2)
   abline(v=c(l.hub,u.hub),col=colhub,lwd=2)
+  abline(v=c(l.bar,u.bar),col=colbar,lwd=2)
   }
 }
 
@@ -84,13 +93,14 @@ if(1) # plots for methods kim, hub, ley and sch
 {
   if(1) # precipitation
   {
-    dt.P <- read.table(paste0(path.main,'thresholds_precipitation_v4.csv'),sep=',',stringsAsFactors = F,header=T)
+    dt.P <- read.table(paste0(path.main,'thresholds_precipitation_v5.csv'),sep=',',stringsAsFactors = F,header=T)
     n <- length(dt.P[,1])
     
     sd.kim <- sd(dt.P[,'kim']/dt.P[,'n'])*100
     sd.hub <- sd(dt.P[,'hub']/dt.P[,'n'])*100
     sd.sch <- sd(dt.P[,'sch']/dt.P[,'n'])*100
     sd.ley <- sd(dt.P[,'ley']/dt.P[,'n'])*100
+    sd.bar <- sd(dt.P[,'bar']/dt.P[,'n'])*100
     
     mean.kim <- mean(dt.P[,'kim']/dt.P[,'n'])*100
     sd.kim.low <- mean.kim-sd.kim
@@ -108,7 +118,11 @@ if(1) # plots for methods kim, hub, ley and sch
     sd.ley.low <- mean.ley-sd.ley
     sd.ley.up <- mean.ley+sd.ley
     
-    dt.P <- read.table(paste0(path.main,'thresholds_precipitation_smallsample_v6.csv'),sep=',',stringsAsFactors = F,header=T)
+    mean.bar <- mean(dt.P[,'bar']/dt.P[,'n'])*100
+    sd.bar.low <- mean.bar-sd.bar
+    sd.bar.up <- mean.bar+sd.bar
+    
+    dt.P <- read.table(paste0(path.main,'thresholds_precipitation_smallsample_v7.csv'),sep=',',stringsAsFactors = F,header=T)
     n <- length(dt.P[,1])
     
     seq.sample <- seq(from=100,to=10,by=-10)
@@ -149,14 +163,21 @@ if(1) # plots for methods kim, hub, ley and sch
       sd.ley.low <- c(sd.ley.low,mean.ley.loop-sd.ley.loop)
       sd.ley.up <- c(sd.ley.up,mean.ley.loop+sd.ley.loop)
 
+      mean.bar.loop <- mean(dt.P[read_,'bar']/dt.P[read_,'n'])*100
+      sd.bar.loop <- sd(dt.P[read_,'bar']/dt.P[read_,'n'])*100
+      
+      mean.bar <- c(mean.bar,mean.bar.loop)
+      sd.bar.low <- c(sd.bar.low,mean.bar.loop-sd.bar.loop)
+      sd.bar.up <- c(sd.bar.up,mean.bar.loop+sd.bar.loop)
       
     }
     
-    data.out <- data.frame(sample.size=x,sd.kim.low=sd.kim.low,mean.kim=mean.kim,sd.kim.up=sd.kim.up,sd.sch.low=sd.sch.low,mean.sch=mean.sch,sd.sch.up=sd.sch.up,sd.ley.low=sd.ley.low,mean.ley=mean.ley,sd.ley.up=sd.ley.up,sd.hub.low=sd.hub.low,mean.hub=mean.hub,sd.hub.up=sd.hub.up,stringsAsFactors = F)
+    data.out <- data.frame(sample.size=x,sd.kim.low=sd.kim.low,mean.kim=mean.kim,sd.kim.up=sd.kim.up,sd.sch.low=sd.sch.low,mean.sch=mean.sch,sd.sch.up=sd.sch.up,sd.ley.low=sd.ley.low,mean.ley=mean.ley,sd.ley.up=sd.ley.up,sd.hub.low=sd.hub.low,mean.hub=mean.hub,sd.hub.up=sd.hub.up,sd.bar.low=sd.bar.low,mean.bar=mean.bar,sd.bar.up=sd.bar.up,stringsAsFactors = F)
     data.out <- data.out[order(data.out[,'sample.size']),]
   
     
-    plot(data.out[,'sample.size'],data.out[,'mean.kim'],ylim=c(3.5,12.5),col=colkim,type='l',ylab='precip')
+    plot(data.out[,'sample.size'],data.out[,'mean.kim'],ylim=c(0,14),col=colkim,type='l',ylab='precip')
+    abline(h=0.7)
     lines(data.out[,'sample.size'],data.out[,'sd.kim.low'],col=colkim,lty=2)
     lines(data.out[,'sample.size'],data.out[,'sd.kim.up'],col=colkim,lty=2)
     
@@ -171,17 +192,24 @@ if(1) # plots for methods kim, hub, ley and sch
     lines(data.out[,'sample.size'],data.out[,'mean.ley'],col=colley)
     lines(data.out[,'sample.size'],data.out[,'sd.ley.low'],col=colley,lty=2)
     lines(data.out[,'sample.size'],data.out[,'sd.ley.up'],col=colley,lty=2)
+    
+    lines(data.out[,'sample.size'],data.out[,'mean.bar'],col=colbar)
+    lines(data.out[,'sample.size'],data.out[,'sd.bar.low'],col=colbar,lty=2)
+    lines(data.out[,'sample.size'],data.out[,'sd.bar.up'],col=colbar,lty=2)
   }
+  
+
   
   if(1) # temperature
   {
-    dt.T <- read.table(paste0(path.main,'thresholds_temperature_v4.csv'),sep=',',stringsAsFactors = F,header=T)
+    dt.T <- read.table(paste0(path.main,'thresholds_temperature_v5.csv'),sep=',',stringsAsFactors = F,header=T)
     n <- length(dt.T[,1])
     
     sd.kim <- sd(dt.T[,'kim']/dt.T[,'n'])*100
     sd.hub <- sd(dt.T[,'hub']/dt.T[,'n'])*100
     sd.sch <- sd(dt.T[,'sch']/dt.T[,'n'])*100
     sd.ley <- sd(dt.T[,'ley']/dt.T[,'n'])*100
+    sd.bar <- sd(dt.T[,'bar']/dt.T[,'n'])*100
     
     mean.kim <- mean(dt.T[,'kim']/dt.T[,'n'])*100
     sd.kim.low <- mean.kim-sd.kim
@@ -199,7 +227,11 @@ if(1) # plots for methods kim, hub, ley and sch
     sd.ley.low <- mean.ley-sd.ley
     sd.ley.up <- mean.ley+sd.ley
     
-    dt.T <- read.table(paste0(path.main,'thresholds_temperature_smallsample_v6.csv'),sep=',',stringsAsFactors = F,header=T)
+    mean.bar <- mean(dt.T[,'bar']/dt.T[,'n'])*100
+    sd.bar.low <- mean.bar-sd.bar
+    sd.bar.up <- mean.bar+sd.bar
+    
+    dt.T <- read.table(paste0(path.main,'thresholds_temperature_smallsample_v7.csv'),sep=',',stringsAsFactors = F,header=T)
     n <- length(dt.T[,1])
     
     seq.sample <- seq(from=100,to=10,by=-10)
@@ -240,14 +272,21 @@ if(1) # plots for methods kim, hub, ley and sch
       sd.ley.low <- c(sd.ley.low,mean.ley.loop-sd.ley.loop)
       sd.ley.up <- c(sd.ley.up,mean.ley.loop+sd.ley.loop)
       
+      mean.bar.loop <- mean(dt.T[read_,'bar']/dt.T[read_,'n'])*100
+      sd.bar.loop <- sd(dt.T[read_,'bar']/dt.T[read_,'n'])*100
+      
+      mean.bar <- c(mean.bar,mean.bar.loop)
+      sd.bar.low <- c(sd.bar.low,mean.bar.loop-sd.bar.loop)
+      sd.bar.up <- c(sd.bar.up,mean.bar.loop+sd.bar.loop)
       
     }
     
-    data.out <- data.frame(sample.size=x,sd.kim.low=sd.kim.low,mean.kim=mean.kim,sd.kim.up=sd.kim.up,sd.sch.low=sd.sch.low,mean.sch=mean.sch,sd.sch.up=sd.sch.up,sd.ley.low=sd.ley.low,mean.ley=mean.ley,sd.ley.up=sd.ley.up,sd.hub.low=sd.hub.low,mean.hub=mean.hub,sd.hub.up=sd.hub.up,stringsAsFactors = F)
+    data.out <- data.frame(sample.size=x,sd.kim.low=sd.kim.low,mean.kim=mean.kim,sd.kim.up=sd.kim.up,sd.sch.low=sd.sch.low,mean.sch=mean.sch,sd.sch.up=sd.sch.up,sd.ley.low=sd.ley.low,mean.ley=mean.ley,sd.ley.up=sd.ley.up,sd.hub.low=sd.hub.low,mean.hub=mean.hub,sd.hub.up=sd.hub.up,sd.bar.low=sd.bar.low,mean.bar=mean.bar,sd.bar.up=sd.bar.up,stringsAsFactors = F)
     data.out <- data.out[order(data.out[,'sample.size']),]
     
     
     plot(data.out[,'sample.size'],data.out[,'mean.kim'],ylim=c(0,10),col=colkim,type='l',ylab='temp')
+    abline(h=0.7)
     lines(data.out[,'sample.size'],data.out[,'sd.kim.low'],col=colkim,lty=2)
     lines(data.out[,'sample.size'],data.out[,'sd.kim.up'],col=colkim,lty=2)
     
@@ -262,7 +301,13 @@ if(1) # plots for methods kim, hub, ley and sch
     lines(data.out[,'sample.size'],data.out[,'mean.ley'],col=colley)
     lines(data.out[,'sample.size'],data.out[,'sd.ley.low'],col=colley,lty=2)
     lines(data.out[,'sample.size'],data.out[,'sd.ley.up'],col=colley,lty=2)
+    
+    lines(data.out[,'sample.size'],data.out[,'mean.bar'],col=colbar)
+    lines(data.out[,'sample.size'],data.out[,'sd.bar.low'],col=colbar,lty=2)
+    lines(data.out[,'sample.size'],data.out[,'sd.bar.up'],col=colbar,lty=2)
   }
+  
+
 }
 
 
@@ -270,7 +315,7 @@ if(1) # plots for methods logbox
 {
   if(1) # precipitation
   {
-    dt.P <- read.table(paste0(path.main,'thresholds_precipitation_v4.csv'),sep=',',stringsAsFactors = F,header=T)
+    dt.P <- read.table(paste0(path.main,'thresholds_precipitation_v5.csv'),sep=',',stringsAsFactors = F,header=T)
     n <- length(dt.P[,1])
     
     # subsampling methods : sqrt(n) blocks subsampled sqrt(n) times without replacement
@@ -305,7 +350,7 @@ if(1) # plots for methods logbox
     
     median.threshold.P <- median(true.percentage.threshold)
 
-    dt.P <- read.table(paste0(path.main,'thresholds_precipitation_smallsample_v6.csv'),sep=',',stringsAsFactors = F,header=T)
+    dt.P <- read.table(paste0(path.main,'thresholds_precipitation_smallsample_v7.csv'),sep=',',stringsAsFactors = F,header=T)
     n <- length(dt.P[dt.P[,'n.samples'] == 10,1])
     
     # subsampling methods : sqrt(n) blocks subsampled sqrt(n) times without replacement
@@ -366,7 +411,7 @@ if(1) # plots for methods logbox
   
   if(1) # temperature
   {
-    dt.T <- read.table(paste0(path.main,'thresholds_temperature_v4.csv'),sep=',',stringsAsFactors = F,header=T)
+    dt.T <- read.table(paste0(path.main,'thresholds_temperature_v5.csv'),sep=',',stringsAsFactors = F,header=T)
     n <- length(dt.T[,1])
     
     # subsampling methods : sqrt(n) blocks subsampled sqrt(n) times without replacement
@@ -401,7 +446,7 @@ if(1) # plots for methods logbox
     median.threshold.T <- median(true.percentage.threshold)
 
     
-    dt.T <- read.table(paste0(path.main,'thresholds_temperature_smallsample_v6.csv'),sep=',',stringsAsFactors = F,header=T)
+    dt.T <- read.table(paste0(path.main,'thresholds_temperature_smallsample_v7.csv'),sep=',',stringsAsFactors = F,header=T)
     n <- length(dt.T[dt.T[,'n.samples'] == 10,1])
     
     # subsampling methods : sqrt(n) blocks subsampled sqrt(n) times without replacement

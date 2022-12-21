@@ -6,23 +6,27 @@
 # 5) calculate the % of points removed for each method for sample sizes varying from 10 to 100
 
 
-path.main <- "~/Science/ctbi12/PartI.outliers/step4_comparisonofmethods/"
+path.main <- "~/Science/ctbi_temp2/"
 setwd(path.main)
 
 set.seed(1)
 
-name.prcp.out <- 'thresholds_precipitation_v4.csv'
-name.temp.out <- 'thresholds_temperature_v4.csv'
-name.hist.prcp.out <- 'hist_precipitation_v4.csv'
-name.hist.temp.out <- 'hist_temperature_v4.csv'
-name.small.prcp.out <- 'thresholds_precipitation_smallsample_v6.csv'
-name.small.temp.out <- 'thresholds_temperature_smallsample_v6.csv'
+name.prcp.out <- 'thresholds_precipitation_v5.csv'
+name.temp.out <- 'thresholds_temperature_v5.csv'
+name.hist.prcp.out <- 'hist_precipitation_v5.csv'
+name.hist.temp.out <- 'hist_temperature_v5.csv'
+name.small.prcp.out <- 'thresholds_precipitation_smallsample_v7.csv'
+name.small.temp.out <- 'thresholds_temperature_smallsample_v7.csv'
 
+
+setwd('C:/Users/fritter/Documents/GitHub/ctbi_article/PartI.outliers/step4_comparisonofmethods/')
 source('f.Kimber_v2.R')
 source('f.Hubert_v2.R')
 source('f.LogBox_v17.R')
 source('f.Leys_v2.R')
 source('f.Schwertman_v2.R')
+source('f.Barbato_v1.R')
+setwd(path.main)
 
 Z.schwertman <- 3
 if(1)
@@ -232,14 +236,14 @@ if(0)
 }
 
 # calculate the number of points removed for each station (all available points)
-if(0)
+if(1)
 {
   if(1) # precipitation residuals
   {
     setwd(paste0(path.main,'IN_precipitation_residuals/'))
     list.stations <- list.files(pattern = "\\.csv$")
     n.station <- length(list.stations)
-    dtf.m.P <- data.frame(stations=substr(list.stations,1,11),n=rep(NA,n.station),kim=rep(NA,n.station),hub=rep(NA,n.station),sch=rep(NA,n.station),ley=rep(NA,n.station),logbox=rep(NA,n.station),l.kim=rep(NA,n.station),l.hub=rep(NA,n.station),l.sch=rep(NA,n.station),l.ley=rep(NA,n.station),l.logbox=rep(NA,n.station),u.kim=rep(NA,n.station),u.hub=rep(NA,n.station),u.sch=rep(NA,n.station),u.ley=rep(NA,n.station),u.logbox=rep(NA,n.station),stringsAsFactors = F)
+    dtf.m.P <- data.frame(stations=substr(list.stations,1,11),n=rep(NA,n.station),kim=rep(NA,n.station),hub=rep(NA,n.station),sch=rep(NA,n.station),ley=rep(NA,n.station),logbox=rep(NA,n.station),bar=rep(NA,n.station),l.kim=rep(NA,n.station),l.hub=rep(NA,n.station),l.sch=rep(NA,n.station),l.ley=rep(NA,n.station),l.logbox=rep(NA,n.station),l.bar=rep(NA,n.station),u.kim=rep(NA,n.station),u.hub=rep(NA,n.station),u.sch=rep(NA,n.station),u.ley=rep(NA,n.station),u.logbox=rep(NA,n.station),u.bar=rep(NA,n.station),stringsAsFactors = F)
     for(i in 1:n.station)
     {
       print(c(i,n.station))
@@ -261,18 +265,21 @@ if(0)
       n.out.sch <- c()
       n.out.ley <- c()
       n.out.logbox <- c()
+      n.out.bar <- c()
       
       l.kim <- c()
       l.hub <- c()
       l.sch <- c()
       l.ley <- c()
       l.logbox <- c()
+      l.bar <- c()
       
       u.kim <- c()
       u.hub <- c()
       u.sch <- c()
       u.ley <- c()
       u.logbox <- c()
+      u.bar <- c()
       
       for(j in 1:3)
       {
@@ -309,24 +316,29 @@ if(0)
         nlu.sch <- f.Schwertman(d.loop,q0.25,q0.50,q0.75,Z.schwertman,k.n.Schwertman[11])
         nlu.ley <- f.Leys(d.loop,q0.50,MAD0)
         nlu.logbox <- f.LogBox(d.loop,coeff.outlier,q0.125,q0.25,q0.375,q0.625,q0.75,q0.875)
+        nlu.bar <- f.Barbato(d.loop,q0.25,q0.75)
+        
 
         n.out.kim <- c(n.out.kim,nlu.kim[1])
         n.out.hub <- c(n.out.hub,nlu.hub[1])
         n.out.sch <- c(n.out.sch,nlu.sch[1])
         n.out.ley <- c(n.out.ley,nlu.ley[1])
         n.out.logbox <- c(n.out.logbox,nlu.logbox[1])
+        n.out.bar <- c(n.out.bar,nlu.bar[1])
         
         l.kim <- c(l.kim,nlu.kim[2])
         l.hub <- c(l.hub,nlu.hub[2])
         l.sch <- c(l.sch,nlu.sch[2])
         l.ley <- c(l.ley,nlu.ley[2])
         l.logbox <- c(l.logbox,nlu.logbox[2])
+        l.bar <- c(l.bar,nlu.bar[2])
         
         u.kim <- c(u.kim,nlu.kim[3])
         u.hub <- c(u.hub,nlu.hub[3])
         u.sch <- c(u.sch,nlu.sch[3])
         u.ley <- c(u.ley,nlu.ley[3])
         u.logbox <- c(u.logbox,nlu.logbox[3])
+        u.bar <- c(u.bar,nlu.bar[3])
       }
 
       n.out.kim <- round(mean(n.out.kim),digits=4)
@@ -334,18 +346,21 @@ if(0)
       n.out.sch <- round(mean(n.out.sch),digits=4)
       n.out.ley <- round(mean(n.out.ley),digits=4)
       n.out.logbox <- round(mean(n.out.logbox),digits=4)
+      n.out.bar <- round(mean(n.out.bar),digits=4)
 
       l.kim <- round(mean(l.kim),digits=4)
       l.hub <- round(mean(l.hub),digits=4)
       l.sch <- round(mean(l.sch),digits=4)
       l.ley <- round(mean(l.ley),digits=4)
       l.logbox <- round(mean(l.logbox),digits=4)
+      l.bar <- round(mean(l.bar),digits=4)
       
       u.kim <- round(mean(u.kim),digits=4)
       u.hub <- round(mean(u.hub),digits=4)
       u.sch <- round(mean(u.sch),digits=4)
       u.ley <- round(mean(u.ley),digits=4)
       u.logbox <- round(mean(u.logbox),digits=4)
+      u.bar <- round(mean(u.bar),digits=4)
       
       dtf.m.P[i,'n'] <- n.all
       dtf.m.P[i,'kim'] <- n.out.kim
@@ -353,18 +368,21 @@ if(0)
       dtf.m.P[i,'sch'] <- n.out.sch
       dtf.m.P[i,'ley'] <- n.out.ley
       dtf.m.P[i,'logbox'] <- n.out.logbox
+      dtf.m.P[i,'bar'] <- n.out.bar
       
       dtf.m.P[i,'l.kim'] <- l.kim
       dtf.m.P[i,'l.hub'] <- l.hub
       dtf.m.P[i,'l.sch'] <- l.sch
       dtf.m.P[i,'l.ley'] <- l.ley
       dtf.m.P[i,'l.logbox'] <- l.logbox
+      dtf.m.P[i,'l.bar'] <- l.bar
       
       dtf.m.P[i,'u.kim'] <- u.kim
       dtf.m.P[i,'u.hub'] <- u.hub
       dtf.m.P[i,'u.sch'] <- u.sch
       dtf.m.P[i,'u.ley'] <- u.ley
       dtf.m.P[i,'u.logbox'] <- u.logbox
+      dtf.m.P[i,'u.bar'] <- u.bar
     }
 
 
@@ -376,7 +394,7 @@ if(0)
     setwd(paste0(path.main,'IN_temperature_residuals/'))
     list.stations <- list.files(pattern = "\\.csv$")
     n.station <- length(list.stations)
-    dtf.m.T <- data.frame(stations=substr(list.stations,1,11),n=rep(NA,n.station),kim=rep(NA,n.station),hub=rep(NA,n.station),sch=rep(NA,n.station),ley=rep(NA,n.station),logbox=rep(NA,n.station),l.kim=rep(NA,n.station),l.hub=rep(NA,n.station),l.sch=rep(NA,n.station),l.ley=rep(NA,n.station),l.logbox=rep(NA,n.station),u.kim=rep(NA,n.station),u.hub=rep(NA,n.station),u.sch=rep(NA,n.station),u.ley=rep(NA,n.station),u.logbox=rep(NA,n.station),stringsAsFactors = F)
+    dtf.m.T <- data.frame(stations=substr(list.stations,1,11),n=rep(NA,n.station),kim=rep(NA,n.station),hub=rep(NA,n.station),sch=rep(NA,n.station),ley=rep(NA,n.station),logbox=rep(NA,n.station),bar=rep(NA,n.station),l.kim=rep(NA,n.station),l.hub=rep(NA,n.station),l.sch=rep(NA,n.station),l.ley=rep(NA,n.station),l.logbox=rep(NA,n.station),l.bar=rep(NA,n.station),u.kim=rep(NA,n.station),u.hub=rep(NA,n.station),u.sch=rep(NA,n.station),u.ley=rep(NA,n.station),u.logbox=rep(NA,n.station),u.bar=rep(NA,n.station),stringsAsFactors = F)
     for(i in 1:n.station)
     {
       print(c(i,n.station))
@@ -399,18 +417,21 @@ if(0)
       n.out.sch <- c()
       n.out.ley <- c()
       n.out.logbox <- c()
+      n.out.bar <- c()
       
       l.kim <- c()
       l.hub <- c()
       l.sch <- c()
       l.ley <- c()
       l.logbox <- c()
+      l.bar <- c()
       
       u.kim <- c()
       u.hub <- c()
       u.sch <- c()
       u.ley <- c()
       u.logbox <- c()
+      u.bar <- c()
       
       for(j in 1:3)
       {
@@ -447,24 +468,29 @@ if(0)
         nlu.sch <- f.Schwertman(d.loop,q0.25,q0.50,q0.75,Z.schwertman,k.n.Schwertman[11])
         nlu.ley <- f.Leys(d.loop,q0.50,MAD0)
         nlu.logbox <- f.LogBox(d.loop,coeff.outlier,q0.125,q0.25,q0.375,q0.625,q0.75,q0.875)
+        nlu.bar <- f.Barbato(d.loop,q0.25,q0.75)
+        
         
         n.out.kim <- c(n.out.kim,nlu.kim[1])
         n.out.hub <- c(n.out.hub,nlu.hub[1])
         n.out.sch <- c(n.out.sch,nlu.sch[1])
         n.out.ley <- c(n.out.ley,nlu.ley[1])
         n.out.logbox <- c(n.out.logbox,nlu.logbox[1])
+        n.out.bar <- c(n.out.bar,nlu.bar[1])
         
         l.kim <- c(l.kim,nlu.kim[2])
         l.hub <- c(l.hub,nlu.hub[2])
         l.sch <- c(l.sch,nlu.sch[2])
         l.ley <- c(l.ley,nlu.ley[2])
         l.logbox <- c(l.logbox,nlu.logbox[2])
+        l.bar <- c(l.bar,nlu.bar[2])
         
         u.kim <- c(u.kim,nlu.kim[3])
         u.hub <- c(u.hub,nlu.hub[3])
         u.sch <- c(u.sch,nlu.sch[3])
         u.ley <- c(u.ley,nlu.ley[3])
         u.logbox <- c(u.logbox,nlu.logbox[3])
+        u.bar <- c(u.bar,nlu.bar[3])
       }
       
       n.out.kim <- round(mean(n.out.kim),digits=4)
@@ -472,18 +498,21 @@ if(0)
       n.out.sch <- round(mean(n.out.sch),digits=4)
       n.out.ley <- round(mean(n.out.ley),digits=4)
       n.out.logbox <- round(mean(n.out.logbox),digits=4)
+      n.out.bar <- round(mean(n.out.bar),digits=4)
       
       l.kim <- round(mean(l.kim),digits=4)
       l.hub <- round(mean(l.hub),digits=4)
       l.sch <- round(mean(l.sch),digits=4)
       l.ley <- round(mean(l.ley),digits=4)
       l.logbox <- round(mean(l.logbox),digits=4)
+      l.bar <- round(mean(l.bar),digits=4)
       
       u.kim <- round(mean(u.kim),digits=4)
       u.hub <- round(mean(u.hub),digits=4)
       u.sch <- round(mean(u.sch),digits=4)
       u.ley <- round(mean(u.ley),digits=4)
       u.logbox <- round(mean(u.logbox),digits=4)
+      u.bar <- round(mean(u.bar),digits=4)
       
       dtf.m.T[i,'n'] <- n.all
       dtf.m.T[i,'kim'] <- n.out.kim
@@ -491,18 +520,21 @@ if(0)
       dtf.m.T[i,'sch'] <- n.out.sch
       dtf.m.T[i,'ley'] <- n.out.ley
       dtf.m.T[i,'logbox'] <- n.out.logbox
+      dtf.m.T[i,'bar'] <- n.out.bar
       
       dtf.m.T[i,'l.kim'] <- l.kim
       dtf.m.T[i,'l.hub'] <- l.hub
       dtf.m.T[i,'l.sch'] <- l.sch
       dtf.m.T[i,'l.ley'] <- l.ley
       dtf.m.T[i,'l.logbox'] <- l.logbox
+      dtf.m.T[i,'l.bar'] <- l.bar
       
       dtf.m.T[i,'u.kim'] <- u.kim
       dtf.m.T[i,'u.hub'] <- u.hub
       dtf.m.T[i,'u.sch'] <- u.sch
       dtf.m.T[i,'u.ley'] <- u.ley
       dtf.m.T[i,'u.logbox'] <- u.logbox
+      dtf.m.T[i,'u.bar'] <- u.bar
     }
     
     fwrite(dtf.m.T,file=paste0(path.main,'OUT/',name.temp.out),sep=',')
@@ -510,7 +542,7 @@ if(0)
 }
 
 # create histograms for all stations
-if(0)
+if(1)
 {
   count.hist <- function(x,seq.x,dtx)
   {
@@ -597,7 +629,7 @@ if(0)
 }
 
 # calculate the number of points removed for each station (sample size varying from n = 10 to n = 100)
-if(0)
+if(1)
 {
   if(1) # precipitation residuals
   {
@@ -607,7 +639,7 @@ if(0)
     seq.samples <- seq(from=10,to=100,by=10)
     n.times <- length(seq.samples)
     n.all <- n.times*n.station
-    dt.P.small <- data.frame(stations=rep('AAA',n.all),n=rep(NA,n.all),n.samples=rep(NA,n.all),kim=rep(NA,n.all),hub=rep(NA,n.all),sch=rep(NA,n.all),ley=rep(NA,n.all),logbox=rep(NA,n.all),stringsAsFactors = F)
+    dt.P.small <- data.frame(stations=rep('AAA',n.all),n=rep(NA,n.all),n.samples=rep(NA,n.all),kim=rep(NA,n.all),hub=rep(NA,n.all),sch=rep(NA,n.all),ley=rep(NA,n.all),logbox=rep(NA,n.all),bar=rep(NA,n.all),stringsAsFactors = F)
     
     k.loop <- 0
     for(i in 1:n.station)
@@ -640,6 +672,7 @@ if(0)
           n.out.sch <- c()
           n.out.ley <- c()
           n.out.logbox <- c()
+          n.out.bar <- c()
           
           for(j in 1:3)
           {
@@ -677,12 +710,15 @@ if(0)
               nlu.sch <- f.Schwertman(d.samp,q0.25,q0.50,q0.75,Z.schwertman,k.n.Schwertman[11])
               nlu.ley <- f.Leys(d.samp,q0.50,MAD0)
               nlu.logbox <- f.LogBox(d.samp,coeff.outlier,q0.125,q0.25,q0.375,q0.625,q0.75,q0.875)
+              nlu.bar <- f.Barbato(d.samp,q0.25,q0.75)
+              
               
               n.out.kim <- c(n.out.kim,nlu.kim[1])
               n.out.hub <- c(n.out.hub,nlu.hub[1])
               n.out.sch <- c(n.out.sch,nlu.sch[1])
               n.out.ley <- c(n.out.ley,nlu.ley[1])
               n.out.logbox <- c(n.out.logbox,nlu.logbox[1])
+              n.out.bar <- c(n.out.bar,nlu.bar[1])
               
             }
           }
@@ -693,6 +729,7 @@ if(0)
           n.out.sch <- round(sum(n.out.sch)/3,digits=4)
           n.out.ley <- round(sum(n.out.ley)/3,digits=4)
           n.out.logbox <- round(sum(n.out.logbox)/3,digits=4)
+          n.out.bar <- round(sum(n.out.bar)/3,digits=4)
           
           dt.P.small[k.loop,'n'] <- seq.samples[k.samples]*n.blocks
           dt.P.small[k.loop,'kim'] <- n.out.kim
@@ -700,6 +737,7 @@ if(0)
           dt.P.small[k.loop,'sch'] <- n.out.sch
           dt.P.small[k.loop,'ley'] <- n.out.ley
           dt.P.small[k.loop,'logbox'] <- n.out.logbox
+          dt.P.small[k.loop,'bar'] <- n.out.bar
           
           
         }
@@ -719,7 +757,7 @@ if(0)
     seq.samples <- seq(from=10,to=100,by=10)
     n.times <- length(seq.samples)
     n.all <- n.times*n.station
-    dt.T.small <- data.frame(stations=rep('AAA',n.all),n=rep(NA,n.all),n.samples=rep(NA,n.all),kim=rep(NA,n.all),hub=rep(NA,n.all),sch=rep(NA,n.all),ley=rep(NA,n.all),logbox=rep(NA,n.all),stringsAsFactors = F)
+    dt.T.small <- data.frame(stations=rep('AAA',n.all),n=rep(NA,n.all),n.samples=rep(NA,n.all),kim=rep(NA,n.all),hub=rep(NA,n.all),sch=rep(NA,n.all),ley=rep(NA,n.all),logbox=rep(NA,n.all),bar=rep(NA,n.all),stringsAsFactors = F)
     
     k.loop <- 0
     for(i in 1:n.station)
@@ -752,6 +790,7 @@ if(0)
           n.out.sch <- c()
           n.out.ley <- c()
           n.out.logbox <- c()
+          n.out.bar <- c()
           
           for(j in 1:3)
           {
@@ -789,12 +828,14 @@ if(0)
               nlu.sch <- f.Schwertman(d.samp,q0.25,q0.50,q0.75,Z.schwertman,k.n.Schwertman[11])
               nlu.ley <- f.Leys(d.samp,q0.50,MAD0)
               nlu.logbox <- f.LogBox(d.samp,coeff.outlier,q0.125,q0.25,q0.375,q0.625,q0.75,q0.875)
+              nlu.bar <- f.Barbato(d.samp,q0.25,q0.75)
               
               n.out.kim <- c(n.out.kim,nlu.kim[1])
               n.out.hub <- c(n.out.hub,nlu.hub[1])
               n.out.sch <- c(n.out.sch,nlu.sch[1])
               n.out.ley <- c(n.out.ley,nlu.ley[1])
               n.out.logbox <- c(n.out.logbox,nlu.logbox[1])
+              n.out.bar <- c(n.out.bar,nlu.bar[1])
             }
           }
           
@@ -804,6 +845,7 @@ if(0)
           n.out.sch <- round(sum(n.out.sch)/3,digits=4)
           n.out.ley <- round(sum(n.out.ley)/3,digits=4)
           n.out.logbox <- round(sum(n.out.logbox)/3,digits=4)
+          n.out.bar <- round(sum(n.out.bar)/3,digits=4)
           
           dt.T.small[k.loop,'n'] <- seq.samples[k.samples]*n.blocks
           dt.T.small[k.loop,'kim'] <- n.out.kim
@@ -811,6 +853,7 @@ if(0)
           dt.T.small[k.loop,'sch'] <- n.out.sch
           dt.T.small[k.loop,'ley'] <- n.out.ley
           dt.T.small[k.loop,'logbox'] <- n.out.logbox
+          dt.T.small[k.loop,'bar'] <- n.out.bar
           
           
         }
